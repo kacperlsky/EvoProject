@@ -1,7 +1,11 @@
 import random
+import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
 
 organisms = []
 foods = []
+NUMSTEP = 100
+NUMGEN = 100
 
 class organism:
     def __init__(self, xposition, yposition, energy=100):
@@ -32,7 +36,29 @@ def initsim(sizex, sizey, organismnum, foodnum):
         foods.append(fd)
         i = i + 1
 
+def plotlo():
+    fig, ax = plt.subplots()
+    fig.set_size_inches(9.6, 5.4)
+    plt.xlim(0, 100)
+    plt.ylim(0, 100)
+    plt.title("Test")
+    circle = Circle([20,20], 2, edgecolor = 'darkslateblue', facecolor = 'mediumslateblue', zorder=5)
+    circle2 = Circle([80,80], 2, edgecolor = 'darkslateblue', facecolor = 'mediumslateblue', zorder=5)
+    circle3 = Circle([50,50], 25, edgecolor = 'darkslateblue', facecolor = 'mediumslateblue', zorder=5)
+    ax.add_artist(circle)
+    ax.add_artist(circle2)
+    ax.add_artist(circle3)
+    ax.set_aspect('equal')
+    frame = plt.gca()
+    
+    plt.show()
+
+
+
+#### 
 ###run 
 initsim(100, 200, 2, 3)
+plotlo()
+
 print("ORGANISMS position x, position y, energy",[(o.xposition, o.yposition, o.energy) for o in organisms])
 print("FOOD position x, position y",[(f.xposition, f.yposition) for f in foods])
