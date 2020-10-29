@@ -1,4 +1,5 @@
 import random
+from math import sqrt
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 
@@ -7,11 +8,19 @@ foods = []
 NUMSTEP = 100
 NUMGEN = 100
 
+def distancecalc(x1, y1, x2, y2):
+    result = sqrt((x2-x1)**2 + (y2-y1)**2)
+    return result
+
 class organism:
-    def __init__(self, xposition, yposition, energy=100):
+    def __init__(self, xposition, yposition, energy=100, food = None, xdelta = 0, ydelta = 0):
         self.xposition = xposition
         self.yposition = yposition
         self.energy = energy
+        self.food = food
+        self.xdelta = xdelta
+        self.ydelta = ydelta
+
     """
     def updateorganism(xposition, yposition, xdelta, ydelta):
         self.xposition = xposition
@@ -19,6 +28,22 @@ class organism:
         self.xdelta = xdelta
         self.ydelta = ydelta
     """
+    def updatexy(self, newx, newy):
+        self.xposition = newx
+        self.yposition = newy
+    
+    def updatedeltaxy(self, newdeltax, newdeltay):
+        self.xdelta = newdeltax
+        self.ydelta = newdeltay
+
+    def updatefood(self, newfood):
+        self.food = newfood
+    
+    def eat(self):
+        self.energy = self.energy + 10
+
+    def move(self):
+        self.energy = self.energy - 1
 
 class food:
     def __init__(self, xposition, yposition):
@@ -31,7 +56,11 @@ class world:
         self.sizey = sizey
 
     
-
+def closeorfood(organism, foods):
+    minx = 0
+    miny = 0
+    mindist = float('inf')
+    return 
 #### init function
 def initsim(sizex, sizey, organismnum, foodnum):
     for i in range(organismnum):
@@ -60,30 +89,32 @@ def plotlo(sizex, sizey, i):
         ax.add_artist(orgedge)
         pass
     ax.set_aspect('equal')
-    """
-    circle = Circle([20,20], 2, edgecolor = 'darkslateblue', facecolor = 'mediumslateblue', zorder=5)
-    circle2 = Circle([80,80], 2, edgecolor = 'darkslateblue', facecolor = 'mediumslateblue', zorder=5)
-    circle3 = Circle([50,50], 25, edgecolor = 'darkslateblue', facecolor = 'mediumslateblue', zorder=5)
+    for fdpoint in foods:
+        fdcircle = Circle([fdpoint.xposition,fdpoint.yposition], 4, facecolor = 'blue', zorder=10)
+        ax.add_artist(fdcircle)
     
-    ax.add_artist(circle)
-    ax.add_artist(circle2)
-    ax.add_artist(circle3)
-    
-    """
-    plt.savefig('img/'+str(i)+'.png', dpi=100)
-    plt.show()
+    plt.savefig('img/'+str(i)+'DAY2.png', dpi=100)
+    #plt.show() - useful but a bit annoying in the same time
 
 
 
 #### 
-def run(sizex, sizey, organismnum, foodnum):
-    for i in range(10):
-        initsim(sizex, sizey, organismnum, foodnum)
+def run(sizex, sizey, organismnum, foodnum, numgen = 10):
+    initsim(sizex, sizey, organismnum, foodnum)
+    for i in range(numgen):
         plotlo(sizex, sizey, i)
         updateorg(organisms, 10, 5)
 ###run 
 
 
-run(1000, 1000, 10, 10)
-print("ORGANISMS position x, position y, energy",[(o.xposition, o.yposition, o.energy) for o in organisms])
-print("FOOD position x, position y",[(f.xposition, f.yposition) for f in foods])
+#run(1000, 1000, 10, 10)
+#print("ORGANISMS position x, position y, energy",[(o.xposition, o.yposition, o.energy) for o in organisms])
+#print("FOOD position x, position y",[(f.xposition, f.yposition) for f in foods])
+or1 = organism(1,1)
+print(or1.xposition)
+or1.updatexy(555, 555)
+print("X:",or1.xposition)
+print("Y:",or1.yposition)
+print("Energy:", or1.energy)
+or1.move()
+print("Energy:", or1.energy)
