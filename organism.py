@@ -33,6 +33,7 @@ class organism:
         self.yposition = newy
     
     def updatedeltaxy(self, newdeltax, newdeltay):
+        
         self.xdelta = newdeltax
         self.ydelta = newdeltay
 
@@ -60,7 +61,18 @@ def closeorfood(organism, foods):
     minx = 0
     miny = 0
     mindist = float('inf')
-    return 
+    minlist = []
+    currentdist = 0
+    for food in foods:
+        currentdist = distancecalc(organism.xposition, organism.yposition, food.xposition, food.yposition)
+        if mindist > currentdist:
+            mindist = currentdist
+            minx = food.xposition
+            miny = food.yposition
+    minlist.append(minx)
+    minlist.append(miny)
+    minlist.append(mindist)
+    return minlist
 #### init function
 def initsim(sizex, sizey, organismnum, foodnum):
     for i in range(organismnum):
@@ -101,20 +113,25 @@ def plotlo(sizex, sizey, i):
 #### 
 def run(sizex, sizey, organismnum, foodnum, numgen = 10):
     initsim(sizex, sizey, organismnum, foodnum)
+    """
     for i in range(numgen):
         plotlo(sizex, sizey, i)
         updateorg(organisms, 10, 5)
+    """
+    for orq in organisms:
+        print(closeorfood(orq, foods))
 ###run 
 
 
-#run(1000, 1000, 10, 10)
+run(1000, 1000, 10, 10)
+print("FOOD position x, position y",[(f.xposition, f.yposition) for f in foods])
 #print("ORGANISMS position x, position y, energy",[(o.xposition, o.yposition, o.energy) for o in organisms])
 #print("FOOD position x, position y",[(f.xposition, f.yposition) for f in foods])
-or1 = organism(1,1)
-print(or1.xposition)
-or1.updatexy(555, 555)
-print("X:",or1.xposition)
-print("Y:",or1.yposition)
-print("Energy:", or1.energy)
-or1.move()
-print("Energy:", or1.energy)
+#or1 = organism(1,1)
+#print(or1.xposition)
+#or1.updatexy(555, 555)
+#print("X:",or1.xposition)
+#print("Y:",or1.yposition)
+#print("Energy:", or1.energy)
+#or1.move()
+#print("Energy:", or1.energy)
