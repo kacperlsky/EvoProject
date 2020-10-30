@@ -28,12 +28,16 @@ class organism:
         self.xdelta = xdelta
         self.ydelta = ydelta
     """
-    def updatexy(self, newx, newy):
-        self.xposition = newx
-        self.yposition = newy
+    def updatexy(self):
+        self.xposition = self.xposition + self.xdelta
+        self.yposition = self.yposition + self.ydelta
     
-    def updatedeltaxy(self, newdeltax, newdeltay):
-        
+    def updatedeltaxy(self):
+        xdim = self.food[0] - self.xposition
+        ydim = self.food[1] - self.yposition
+        dist = distancecalc(self.xposition, self.yposition, self.food[0], self.food[1])
+        newdeltax = xdim / dist
+        newdeltay = ydim / dist
         self.xdelta = newdeltax
         self.ydelta = newdeltay
 
@@ -72,7 +76,12 @@ def closeorfood(organism, foods):
     minlist.append(minx)
     minlist.append(miny)
     minlist.append(mindist)
-    return minlist
+    minlist.append(organism.xdelta)
+    organism.updatefood([minx, miny])
+    organism.updatedeltaxy()
+    minlist.append(organism.xdelta)
+    
+
 #### init function
 def initsim(sizex, sizey, organismnum, foodnum):
     for i in range(organismnum):
@@ -83,12 +92,12 @@ def initsim(sizex, sizey, organismnum, foodnum):
         fd = food(random.randint(0, sizex), random.randint(0, sizey))
         foods.append(fd)
         i = i + 1
-
+"""
 def updateorg(organisms, xdelta, ydelta):
     for org in organisms:
         org.xposition = org.xposition + xdelta
         org.yposition = org.yposition + ydelta
-
+"""
 def plotlo(sizex, sizey, i):
     fig, ax = plt.subplots()
     plt.xlim(0, sizex)
@@ -105,26 +114,26 @@ def plotlo(sizex, sizey, i):
         fdcircle = Circle([fdpoint.xposition,fdpoint.yposition], 4, facecolor = 'blue', zorder=10)
         ax.add_artist(fdcircle)
     
-    plt.savefig('img/'+str(i)+'DAY2.png', dpi=100)
+    plt.savefig('imgbatch/'+str(i)+'DAY3.png', dpi=100)
     #plt.show() - useful but a bit annoying in the same time
 
 
 
 #### 
-def run(sizex, sizey, organismnum, foodnum, numgen = 10):
+def run(sizex, sizey, organismnum, foodnum, numgen=10, numbatch = 10):
     initsim(sizex, sizey, organismnum, foodnum)
-    """
+    
     for i in range(numgen):
         plotlo(sizex, sizey, i)
-        updateorg(organisms, 10, 5)
-    """
-    for orq in organisms:
-        print(closeorfood(orq, foods))
+        for j in range(numbatch):
+            for orq in organisms:
+                closeorfood(orq, foods)
+                orq.updatexy()
 ###run 
 
 
-run(1000, 1000, 10, 10)
-print("FOOD position x, position y",[(f.xposition, f.yposition) for f in foods])
+run(1000, 1000, 10, 10, 10, 10)
+#print("FOOD position x, position y",[(f.xposition, f.yposition) for f in foods])
 #print("ORGANISMS position x, position y, energy",[(o.xposition, o.yposition, o.energy) for o in organisms])
 #print("FOOD position x, position y",[(f.xposition, f.yposition) for f in foods])
 #or1 = organism(1,1)
